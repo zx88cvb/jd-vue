@@ -1,9 +1,8 @@
 <template>
-  <Home />
+  <router-view />
 </template>
 
 <script setup>
-import Home from './views/home/Home.vue';
 </script>
 
 <style lang="scss" scoped>
