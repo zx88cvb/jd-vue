@@ -6,5 +6,5 @@
 import Home from './views/home/Home.vue';
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 </style>
