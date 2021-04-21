@@ -52,8 +52,8 @@
 </script>
 
 <style lang="scss" scoped>
-@import '../../style/viriables.scss';
-@import '../../style/mixins.scss';
+@import '@/style/viriables.scss';
+@import '@/style/mixins.scss';
 .position {
   position: relative;
   padding: .16rem .24rem .16rem 0;

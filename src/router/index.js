@@ -1,12 +1,14 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import Home from '../views/home/Home.vue'
-import Login from '../views/login/Login.vue'
+import Home from '@/views/home/Home.vue'
+import Login from '@/views/login/Login.vue'
+import Register from '@/views/register/Register.vue'
 
 const routes = [{
     path: '/',
     name: 'Home',
     component: Home
-  }, {
+  },
+  {
     path: '/login',
     name: 'Login',
     component: Login,
@@ -15,6 +17,15 @@ const routes = [{
       isLogin? next({ name: 'Home' }): next()
     }
   },
+  {
+    path: '/register',
+    name: 'Register',
+    component: Register,
+    beforeEnter: (to, from, next) => {
+      const { isLogin } = localStorage;
+      isLogin? next({ name: 'Home' }): next()
+    }
+  }
   // {
   //   path: '/about',
   //   name: 'About',
@@ -32,7 +43,8 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const { isLogin } = localStorage;
-
-  isLogin || to.name === 'Login'? next(): next({ name: 'Login' })
+  const { name } = to;
+  const isLoginOrRegister = (name === "Login" || name === "Register");
+  isLogin || isLoginOrRegister? next(): next({ name: 'Login' })
 })
 export default router

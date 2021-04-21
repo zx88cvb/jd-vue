@@ -50,7 +50,7 @@
 </script>
 
 <style lang="scss" scoped>
-@import '../../style/viriables.scss';
+@import '@/style/viriables.scss';
 .nearby {
   &__title {
     margin: .16rem 0 .04rem 0;
