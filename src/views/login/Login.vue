@@ -6,13 +6,13 @@
     <div class="wrapper__input">
       <input type="text"
         class="wrapper__input__content"
-        v-model="data.username"
+        v-model="username"
         placeholder="请输入手机号" />
     </div>
     <div class="wrapper__input">
       <input type="password"
         class="wrapper__input__content"
-        v-model="data.password"
+        v-model="password"
         placeholder="请输入密码" />
     </div>
     <div
@@ -22,41 +22,64 @@
     </div>
     <div class="wrapper__login-link"
       @click="handleResiterClick">立即注册</div>
+    <Toast
+      v-if="show"
+      :message="toastMessage" />
   </div>  
 </template>
 
 <script setup>
-import { reactive } from 'vue';
+import { reactive, toRefs } from 'vue';
 import { useRouter } from 'vue-router';
-import { post } from '@/utils/request'
-
-  const data = reactive({
-    username: '',
-    password: ''
-  });
+import { post } from '@/utils/request';
+import Toast, { useToastEffect } from '@/components/Toast.vue';
+  // 路由
   const router = useRouter();
-  // 登录
-  const handleLogin = async () => {
-    try {
-      const result = await post('/api/user/login', {
-        username: data.username,
-        password: data.password
-      })
+  
+  // 弹窗
+  const { show, toastMessage , showToast } = useToastEffect();
 
-      if (result?.errno === 0) {
-        localStorage.isLogin = true;
-        router.push({ name: 'Home' });
-      } else {
-        alert("登录失败");
+  // 封装登录逻辑
+  const useLoginEffect = (showToast) => {
+    const data = reactive({
+      username: '',
+      password: ''
+    });
+    // 登录
+    const handleLogin = async () => {
+      try {
+        const result = await post('11/api/user/login', {
+          username: data.username,
+          password: data.password
+        })
+
+        if (result?.errno === 0) {
+          localStorage.isLogin = true;
+          router.push({ name: 'Home' });
+        } else {
+          showToast("登录失败");
+        }
+      } catch (e) {
+        showToast("请求失败");
       }
-    } catch (e) {
-      alert("登录失败");
     }
+
+    const { username, password } = toRefs(data);
+    return { username, password, handleLogin };
   }
-  // 注册
-  const handleResiterClick = () => {
-    router.push({ name: 'Register' });
+
+  const { username, password, handleLogin } =  useLoginEffect(showToast);
+  
+  // 点击注册逻辑
+  const useRegisterEffect = () => {
+    // 注册
+    const handleResiterClick = () => {
+      router.push({ name: 'Register' });
+    }
+    return { handleResiterClick };
   }
+  const { handleResiterClick } = useRegisterEffect();
+  
 </script>
 
 <style lang="scss" scoped>
