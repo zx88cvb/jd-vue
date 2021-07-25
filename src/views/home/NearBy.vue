@@ -3,19 +3,22 @@
     <h3 class="nearby__title">附近店铺</h3>
     <div
       v-for="item in nearByList"
-      :key="item.id"
+      :key="item._id"
       class="nearby__item">
       <img
         :src="item.imgUrl"
         alt="nearby"
         class="nearby__item__img" />
       <div class="nearby__content">
-        <div class="nearby__content__title">{{item.title}}</div>
+        <div class="nearby__content__title">{{item.name}}</div>
         <div class="nearby__content__tags">
-          <span
+          <span class="nearby__content__tag">月售: {{item.sales}}</span>
+          <span class="nearby__content__tag">起送: {{item.expressLimit}}</span>
+          <span class="nearby__content__tag">基础运费: {{item.expressPrice}}</span>
+          <!-- <span
             v-for="(innerItem, innerIndex) in item.tags"
             :key="innerIndex"
-            class="nearby__content__tag">{{innerItem}}</span>
+            class="nearby__content__tag">{{innerItem}}</span> -->
         </div>
         <p class="nearby__content__highlight">{{item.desc}}</p>
       </div>
@@ -24,29 +27,25 @@
 </template>
 
 <script setup>
-  const nearByList = [
-    {
-      id: 1,
-      title: '沃尔玛',
-      imgUrl: 'http://www.dell-lee.com/imgs/vue3/near.png',
-      tags: ['月售1万+', '起送$0', '基础运费$5'],
-      desc: 'VIP尊享满89元减4元'
-    },
-    {
-      id: 1,
-      title: '沃尔玛',
-      imgUrl: 'http://www.dell-lee.com/imgs/vue3/near.png',
-      tags: ['月售1万+', '起送$0', '基础运费$5'],
-      desc: 'VIP尊享满89元减4元'
-    },
-    {
-      id: 1,
-      title: '沃尔玛',
-      imgUrl: 'http://www.dell-lee.com/imgs/vue3/near.png',
-      tags: ['月售1万+', '起送$0', '基础运费$5'],
-      desc: 'VIP尊享满89元减4元'
+import { ref } from 'vue';
+import { get } from '@/utils/request';
+
+
+const useNearByListEffect = () => {
+  const nearByList = ref([]);
+  // 获取列表数据
+  const getNearByList = async () => {
+    const result = await get('/api/shop/hot-list');
+    if (result?.errno === 0) {
+      nearByList.value = result.data;
+    } else {
+      console.error("hot-list错误");
     }
-  ];
+  }
+  return { nearByList, getNearByList };
+}
+const { nearByList, getNearByList } = useNearByListEffect();
+getNearByList();
 </script>
 
 <style lang="scss" scoped>

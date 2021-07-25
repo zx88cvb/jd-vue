@@ -48,7 +48,7 @@ import Toast, { useToastEffect } from '@/components/Toast.vue';
     // 登录
     const handleLogin = async () => {
       try {
-        const result = await post('11/api/user/login', {
+        const result = await post('/api/user/login', {
           username: data.username,
           password: data.password
         })
