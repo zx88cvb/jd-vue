@@ -1,0 +1,174 @@
+<template>
+  <div>
+    cart
+  </div>
+</template>
+
+<script setup>
+</script>
+
+<style lang="scss" scoped>
+@import '@/style/viriables.scss';
+@import '@/style/mixins.scss';
+.mask {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  background: rgba(0, 0, 0, .5);
+  z-index: 1;
+}
+.cart {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  background: $bgColor;
+}
+.product {
+  overflow-y: scroll;
+  flex: 1;
+  background: $bgColor;
+  &__header {
+    display: flex;
+    line-height: .52rem;
+    border-bottom: .01rem solid $content-bgColor;
+    font-size: .14rem;
+    color: $content-fontcolor;
+    &__all {
+      width: .64rem;
+      margin-left: .18rem;
+    }
+    &__icon {
+      display: inline-block;
+      margin-right: .1rem;
+      vertical-align: top;
+      color: $btn-bgColor;
+      font-size: .2rem;
+    }
+    &__clear {
+      flex: 1;
+      margin-right: .16rem;
+      text-align: right;
+      &__btn {
+        display: inline-block;
+      }
+    }
+  }
+  &__item {
+    position: relative;
+    display: flex;
+    padding: .12rem 0;
+    margin: 0 .16rem;
+    border-bottom: .01rem solid $content-bgColor;
+    &__checked {
+      line-height: .5rem;
+      margin-right: .2rem;
+      color: $btn-bgColor;
+      font-size: .2rem;
+    }
+    &__detail {
+      overflow: hidden;
+    }
+    &__img {
+      width: .46rem;
+      height: .46rem;
+      margin-right: .16rem;
+    }
+    &__title {
+      margin: 0;
+      line-height: .2rem;
+      font-size: .14rem;
+      color: $content-fontcolor;
+      @include ellipsis;
+    }
+    &__price {
+      margin: .06rem 0 0 0;
+      line-height: .2rem;
+      font-size: .14rem;
+      color: $hightlight-fontColor;
+    }
+    &__yen {
+      font-size: .12rem;
+    }
+    &__origin {
+      margin-left: .06rem;
+      line-height: .2rem;
+      font-size: .12rem;
+      color: $light-fontColor;
+      text-decoration: line-through;
+    }
+    .product__number {
+      position: absolute;
+      right: 0;
+      bottom: .26rem;
+      &__minus {
+        position:relative;
+        top: .02rem;
+        color: $medium-fontColor;
+        margin-right: .05rem;
+      }
+      &__plus {
+        position:relative;
+        top: .02rem;
+        color: $btn-bgColor;
+        margin-left: .05rem;
+      }
+    }
+  }
+}
+.check {
+  display: flex;
+  height: .49rem;
+  border-top: .01rem solid $content-bgColor;
+  line-height: .49rem;
+  &__icon {
+    position: relative;
+    width: .84rem;
+    &__img {
+      display: block;
+      margin: .12rem auto;
+      width: .28rem;
+      height: .26rem;
+    }
+    &__tag {
+      position: absolute;
+      left: .46rem;
+      top: .04rem;
+      padding: 0 .04rem;
+      min-width: .2rem;
+      height: .2rem;
+      line-height: .2rem;
+      background-color: $hightlight-fontColor;
+      border-radius: .1rem;
+      font-size: .12rem;
+      text-align: center;
+      color: #fff;
+      transform: scale(.5);
+      transform-origin: left center;
+    }
+  }
+  &__info {
+    flex: 1;
+    color: $content-fontcolor;
+    font-size: .12rem;
+    &__price {
+      line-height: .49rem;
+      color: $hightlight-fontColor;
+      font-size: .18rem;
+    }
+  }
+  &__btn {
+    width: .98rem;
+    background-color: $btn-bgColor;
+    text-align: center;
+    font-size: .14rem;
+    a {
+      color: $bgColor;
+      text-decoration: none;
+    }
+  }
+}
+</style>
