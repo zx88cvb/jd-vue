@@ -34,7 +34,7 @@
               <use :xlink:href='"#icon-minus"'></use>
             </svg>
           </span>
-            {{getProductCartCount(shopId, item._id)}}
+            {{getProductCartCount(item._id)}}
           <span
             class="product__number__plus iconfont"
             @click="() => { changeCartItem(shopId, item._id, item, 1, shopName) }"
@@ -53,6 +53,7 @@
 import { reactive, ref, toRefs, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
 import { get } from '@/utils/request'
+import { useCommonCartEffect } from '@/effects/commonCartEffect.js'
 
   const categories = [{
     name: '全部商品',
@@ -61,6 +62,9 @@ import { get } from '@/utils/request'
     name: '秒杀',
     tab: 'seckill'
   }]
+
+  const route = useRoute()
+  const shopId = route.params.id
 
   /**tab相关 */
   const useTabEffect = () => {
@@ -73,8 +77,6 @@ import { get } from '@/utils/request'
 
   /**操作list */
   const useCurrentListEffect = (tab) => {
-    const route = useRoute()
-    const shopId = route.params.id
     const content = reactive({
       list: []
     })
@@ -92,11 +94,12 @@ import { get } from '@/utils/request'
     const { list } = toRefs(content)
     return { list }
   }
-
   const { currentTab, handleTabClick } = useTabEffect();
   const { list } = useCurrentListEffect(currentTab);
+  const { changeCartItem } = useCommonCartEffect();
 
-  const getProductCartCount = (shopId, id) => {
+
+  const getProductCartCount = (id) => {
 
   }
 </script>

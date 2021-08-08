@@ -23,7 +23,7 @@
       :hideBorder="true"
       v-show="item.imgUrl"/>
     <Content />
-    <!-- <Cart /> -->
+    <Cart />
   </div>
 </template>
 

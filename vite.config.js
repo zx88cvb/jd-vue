@@ -13,7 +13,8 @@ export default defineConfig({
       '@/views': resolve(__dirname, 'src/views/'),
       '@/components': resolve(__dirname, 'src/components/'),
       '@/style': resolve(__dirname, 'src/style/'),
-      '@/utils': resolve(__dirname, 'src/utils/')
+      '@/utils': resolve(__dirname, 'src/utils/'),
+      '@/effects': resolve(__dirname, 'src/effects/')
     }
   }
 })

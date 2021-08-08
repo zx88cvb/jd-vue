@@ -1,10 +1,122 @@
 <template>
-  <div>
-    cart
+  <div class="cart">
+    <div class="product">
+      <div class="product__header">
+      </div>
+      <template
+        v-for="item in productList"
+        :key="item._id"
+      >
+        <div class="product__item" v-if="item.count > 0">
+          <div class="product__item__checked iconfont"
+            @click="() => changeCartItemChecked(shopId, item._id)">
+            <svg class="icon" aria-hidden="true">
+              <use :xlink:href="item.check? '#icon-xuanzhongduigou': '#icon-icons-'"></use>
+            </svg>
+          </div>
+          <img class="product__item__img" :src="item.imgUrl" />
+          <div class="product__item__detail">
+            <h4 class="product__item__title">{{item.name}}</h4>
+            <p class="product__item__price">
+              <span class="product__item__yen">&yen;</span>{{item.price}}
+              <span class="product__item__origin">&yen;{{item.oldPrice}}</span>
+            </p>
+          </div>
+          <div class="product__number">
+            <span
+              class="product__number__minus iconfont"
+              @click="() => { changeCartItem(shopId, item._id, item, -1, shopName) }"
+            >
+              <svg class="icon" aria-hidden="true">
+                <use :xlink:href='"#icon-minus"'></use>
+              </svg>
+            </span>
+              {{item.count}}
+            <span
+              class="product__number__plus iconfont"
+              @click="() => { changeCartItem(shopId, item._id, item, 1, shopName) }"
+            >
+              <svg class="icon" aria-hidden="true">
+                <use :xlink:href='"#icon-plus"'></use>
+              </svg>
+            </span>
+          </div>
+        </div>
+      </template>
+    </div>
+    <div class="check">
+      <div class="check__icon">
+        <img class="check__icon__img" src="http://www.dell-lee.com/imgs/vue3/basket.png" />
+        <div class="check__icon__tag">{{total}}</div>
+      </div>
+      <div class="check__info">
+        总计:<span class="check__info__price">&yen;{{price}}</span>
+      </div>
+      <div class="check__btn">去结算</div>
+    </div>
   </div>
 </template>
 
 <script setup>
+import { computed } from 'vue'
+import { useStore } from 'vuex';
+import { useRoute } from 'vue-router'
+import { useCommonCartEffect } from '@/effects/commonCartEffect.js'
+
+const store = useStore()
+const route = useRoute()
+
+const shopId = route.params.id
+const cartList = store.state.cartList
+
+/**购物车相关逻辑 */
+const useCartEffect = () => {
+  // 改变购物车数量
+  const { changeCartItem } = useCommonCartEffect();
+  // 计算属性 统计商品个数
+  const total = computed(() => {
+    const productList = cartList[shopId]
+    let count = 0;
+    if (productList) {
+      for (let i in productList) {
+        const product = productList[i]
+        count += product.count
+      }
+    }
+    return count;
+  })
+
+  // 统计商品价格
+  const price = computed(() => {
+    const productList = cartList[shopId]
+    let count = 0;
+    if (productList) {
+      for (let i in productList) {
+        const product = productList[i]
+        if (product.check) {
+          // 只算勾选的金额
+          count += (product.count * product.price)
+        }
+      }
+    }
+    return count.toFixed(2);
+  })
+
+  // 取购物车内容
+  const productList = computed(() => {
+    const productList = cartList[shopId] || []
+    return productList;
+  })
+
+  // 改变勾选按钮
+  const changeCartItemChecked = (shopId, productId) => {
+    store.commit('changeCartItemChecked', {shopId, productId})
+  }
+  return { total, price, productList, changeCartItem, changeCartItemChecked };
+}
+
+const { total, price, productList, changeCartItem, changeCartItemChecked } = useCartEffect();
+
 </script>
 
 <style lang="scss" scoped>
