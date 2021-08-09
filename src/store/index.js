@@ -8,14 +8,11 @@ export default Vuex.createStore({
   mutations: {
     addItemToCart(state, payload) {
       const { shopId, productId, productInfo } = payload;
-      let shopInfo = state.cartList[shopId];
-      if(!shopInfo) {
-        shopInfo = {}
-      }
+      let shopInfo = state.cartList[shopId] || {};
       let product = shopInfo[productId];
       if(!product) {
+        productInfo.count = 0
         product = productInfo;
-        product.count = 0;
       }
       product.count = product.count + payload.num;
       if (product.count > 0) {
@@ -33,6 +30,22 @@ export default Vuex.createStore({
       const { shopId, productId } = payload;
       const product = state.cartList[shopId][productId];
       product.check = !product.check;
+    },
+    // 清空购物车
+    cleanCartProducts(state, payload) {
+      const { shopId } = payload;
+      state.cartList[shopId] = {}
+    },
+    // 全选按钮
+    setCartItemsChecked(state, payload) {
+      const { shopId } = payload;
+      const products = state.cartList[shopId];
+      if (products) {
+        for (let key in products) {
+          const product = products[key];
+          product.check = true;
+        }
+      }
     }
   },
   actions: {

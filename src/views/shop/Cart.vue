@@ -1,7 +1,26 @@
 <template>
+  <div class="mask"
+    v-if="showCart"
+    @click="handleCartShowChange" />
   <div class="cart">
-    <div class="product">
+    <div class="product" v-if="showCart">
       <div class="product__header">
+        <div
+          class="product__header__all"
+          @click="() => setCartItemsChecked(shopId)">
+          <span class="product__header__icon iconfont">
+            <svg class="icon" aria-hidden="true">
+              <use :xlink:href="allChecked? '#icon-xuanzhongduigou': '#icon-icons-'"></use>
+            </svg>
+          </span>
+          全选
+        </div>
+        <div
+          class="product__header__clear">
+          <span
+            class="product__header__clear__btn"
+            @click="() => cleanCartProducts(shopId)">清空购物车</span>
+        </div>
       </div>
       <template
         v-for="item in productList"
@@ -46,19 +65,25 @@
     </div>
     <div class="check">
       <div class="check__icon">
-        <img class="check__icon__img" src="http://www.dell-lee.com/imgs/vue3/basket.png" />
+        <img class="check__icon__img"
+        src="http://www.dell-lee.com/imgs/vue3/basket.png"
+        @click="handleCartShowChange" />
         <div class="check__icon__tag">{{total}}</div>
       </div>
       <div class="check__info">
         总计:<span class="check__info__price">&yen;{{price}}</span>
       </div>
-      <div class="check__btn">去结算</div>
+      <div class="check__btn">
+        <router-link :to="{name: 'Home'}">
+          去结算
+        </router-link>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 import { useStore } from 'vuex';
 import { useRoute } from 'vue-router'
 import { useCommonCartEffect } from '@/effects/commonCartEffect.js'
@@ -68,6 +93,20 @@ const route = useRoute()
 
 const shopId = route.params.id
 const cartList = store.state.cartList
+
+
+
+/**隐藏购物车逻辑 */
+const toggleCartEffect = () => {
+  // 是否展示购物车
+  const showCart = ref(false)
+
+  // 是否显示购物车
+  const handleCartShowChange = () => {
+    showCart.value = !showCart.value
+  }
+  return { showCart, handleCartShowChange };
+}
 
 /**购物车相关逻辑 */
 const useCartEffect = () => {
@@ -108,14 +147,43 @@ const useCartEffect = () => {
     return productList;
   })
 
+  // 全选
+  const allChecked = computed(() => {
+    const productList = cartList[shopId]
+    let result = true;
+    if (productList) {
+      for (let i in productList) {
+        const product = productList[i]
+        if (product.count > 0 && !product.check) {
+          result = false
+        }
+      }
+    }
+    return result;
+  })
+
   // 改变勾选按钮
   const changeCartItemChecked = (shopId, productId) => {
     store.commit('changeCartItemChecked', {shopId, productId})
   }
-  return { total, price, productList, changeCartItem, changeCartItemChecked };
+
+  // 清空购物车
+  const cleanCartProducts = (shopId) => {
+    store.commit('cleanCartProducts', {shopId})
+  }
+
+  // 全选按钮
+  const setCartItemsChecked = (shopId) => {
+    store.commit('setCartItemsChecked', {shopId})
+  }
+
+
+  return { total, price, productList, changeCartItem, changeCartItemChecked, cleanCartProducts, setCartItemsChecked, allChecked };
 }
 
-const { total, price, productList, changeCartItem, changeCartItemChecked } = useCartEffect();
+const { total, price, productList, changeCartItem, changeCartItemChecked, cleanCartProducts, setCartItemsChecked, allChecked } = useCartEffect();
+
+const { showCart, handleCartShowChange } = toggleCartEffect();
 
 </script>
 
